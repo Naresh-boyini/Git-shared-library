@@ -1,96 +1,167 @@
-def call(Map params) {
-    def stagesToRun = params.STAGES_TO_RUN.split(',').collect { it.trim() }
-    def scannerHome = tool params.SCANNER_TOOL_NAME
-    def dependencyCheckHome = tool params.DEPENDENCY_TOOL_NAME
-
+def call(Map params = [:]) {
     pipeline {
         agent any
 
+        parameters {
+            string(
+                name: 'STAGES_TO_RUN',
+                defaultValue: 'Checkout, Modify go.mod, Build, Unit Test, SonarQube Analysis, Dependency Scan, Archive Report',
+                description: 'Comma-separated list of stages to run'
+            )
+            string(
+                name: 'GO_TOOL_NAME',
+                defaultValue: 'Go',
+                description: 'Name of the Go tool as configured in Jenkins'
+            )
+            string(
+                name: 'SCANNER_TOOL_NAME',
+                defaultValue: 'sonar',
+                description: 'Name of the SonarQube Scanner tool as configured in Jenkins'
+            )
+            string(
+                name: 'DEPENDENCY_TOOL_NAME',
+                defaultValue: 'Dependency-Check',
+                description: 'Name of the dependency scanning tool as configured in Jenkins'
+            )
+            string(
+                name: 'GIT_BRANCH',
+                defaultValue: 'main',
+                description: 'Git branch to checkout'
+            )
+            string(
+                name: 'GIT_URL',
+                defaultValue: 'https://github.com/Naresh-boyini/employee-api.git',
+                description: 'Git repository URL'
+            )
+            string(
+                name: 'SONARQUBE_ENV_NAME',
+                defaultValue: 'sonar-kumar',
+                description: 'SonarQube environment name'
+            )
+        }
+
         tools {
-            go params.GO_TOOL_NAME
+            go "${params.GO_TOOL_NAME}" // Use the name exactly as configured in Jenkins' Global Tool Configuration
         }
 
         environment {
-            SCANNER_HOME = scannerHome
-            DEPENDENCY_CHECK_HOME = dependencyCheckHome
-            GO_VERSION = '1.18'
+            SCANNER_HOME = "${tool(params.SCANNER_TOOL_NAME)}" // Define SCANNER_HOME for SonarQube
+            DEPENDENCY_CHECK_HOME = "${tool(params.DEPENDENCY_TOOL_NAME)}" // Define DEPENDENCY_CHECK_HOME for Dependency-Check
+            GO_VERSION = '1.18' // Define GO_VERSION for Go
         }
 
         stages {
             stage('Checkout') {
                 when {
-                    expression { stagesToRun.contains('Checkout') }
+                    expression {
+                        def stagesToRun = params.STAGES_TO_RUN.split(',').collect { it.trim() }
+                        echo "Stages to run: ${stagesToRun}"
+                        return stagesToRun.contains('Checkout')
+                    }
                 }
                 steps {
-                    script {
-                        org.yourorg.YourLibrary.checkoutCode(this, params.GIT_BRANCH, params.GIT_URL)
-                    }
+                    git branch: "${params.GIT_BRANCH}", url: "${params.GIT_URL}"
                 }
             }
 
             stage('Modify go.mod') {
                 when {
-                    expression { stagesToRun.contains('Modify go.mod') }
+                    expression {
+                        def stagesToRun = params.STAGES_TO_RUN.split(',').collect { it.trim() }
+                        echo "Stages to run: ${stagesToRun}"
+                        return stagesToRun.contains('Modify go.mod')
+                    }
                 }
                 steps {
-                    script {
-                        org.yourorg.YourLibrary.modifyGoMod(this)
-                    }
+                    sh '''
+                    export GO111MODULE=on
+                    sed -i 's/go 1.20/go 1.18/g' go.mod
+                    '''
                 }
             }
 
             stage('Build') {
                 when {
-                    expression { stagesToRun.contains('Build') }
+                    expression {
+                        def stagesToRun = params.STAGES_TO_RUN.split(',').collect { it.trim() }
+                        echo "Stages to run: ${stagesToRun}"
+                        return stagesToRun.contains('Build')
+                    }
                 }
                 steps {
-                    script {
-                        org.yourorg.YourLibrary.buildProject(this)
-                    }
+                    sh '''
+                    go mod tidy
+                    go mod download
+                    go build -o employee-api .
+                    '''
                 }
             }
 
             stage('Unit Test') {
                 when {
-                    expression { stagesToRun.contains('Unit Test') }
+                    expression {
+                        def stagesToRun = params.STAGES_TO_RUN.split(',').collect { it.trim() }
+                        echo "Stages to run: ${stagesToRun}"
+                        return stagesToRun.contains('Unit Test')
+                    }
                 }
                 steps {
-                    script {
-                        org.yourorg.YourLibrary.runUnitTests(this)
-                    }
+                    sh 'go test ./... -v | tee unit-test-results.xml'
                 }
             }
 
             stage('SonarQube Analysis') {
                 when {
-                    expression { stagesToRun.contains('SonarQube Analysis') }
+                    expression {
+                        def stagesToRun = params.STAGES_TO_RUN.split(',').collect { it.trim() }
+                        echo "Stages to run: ${stagesToRun}"
+                        return stagesToRun.contains('SonarQube Analysis')
+                    }
                 }
                 steps {
-                    script {
-                        org.yourorg.YourLibrary.runSonarQubeAnalysis(this, scannerHome, params.SONARQUBE_ENV_NAME)
+                    withSonarQubeEnv("${params.SONARQUBE_ENV_NAME}") {
+                        sh "${SCANNER_HOME}/bin/sonar-scanner"
                     }
                 }
             }
 
             stage('Dependency Scan') {
                 when {
-                    expression { stagesToRun.contains('Dependency Scan') }
+                    expression {
+                        def stagesToRun = params.STAGES_TO_RUN.split(',').collect { it.trim() }
+                        echo "Stages to run: ${stagesToRun}"
+                        return stagesToRun.contains('Dependency Scan')
+                    }
                 }
                 steps {
-                    script {
-                        org.yourorg.YourLibrary.runDependencyScan(this, params.DEPENDENCY_TOOL_NAME)
-                    }
+                    // Run OWASP Dependency-Check
+                    dependencyCheck additionalArguments: '--scan . --format ALL', odcInstallation: "${params.DEPENDENCY_TOOL_NAME}"
                 }
             }
 
             stage('Archive Report') {
                 when {
-                    expression { stagesToRun.contains('Archive Report') }
+                    expression {
+                        def stagesToRun = params.STAGES_TO_RUN.split(',').collect { it.trim() }
+                        echo "Stages to run: ${stagesToRun}"
+                        return stagesToRun.contains('Archive Report')
+                    }
                 }
                 steps {
-                    script {
-                        org.yourorg.YourLibrary.archiveReports(this)
-                    }
+                    // Archive the unit test results
+                    archiveArtifacts artifacts: 'unit-test-results.xml', allowEmptyArchive: true
+
+                    echo "Publishing Reports"
+                    // Publish OWASP Dependency-Check report in HTML format
+                    publishHTML([
+                        allowMissing: false,
+                        alwaysLinkToLastBuild: true,
+                        keepAll: true,
+                        reportDir: '.',
+                        reportFiles: 'dependency-check-report.html',
+                        reportName: 'Dependency Check Report',
+                        reportTitles: ''
+                    ])
                 }
             }
         }
@@ -98,9 +169,12 @@ def call(Map params) {
         post {
             success {
                 echo 'Build successful!'
+                // Additional actions on success
             }
+
             failure {
                 echo 'Build failed!'
+                // Additional actions on failure
             }
         }
     }
