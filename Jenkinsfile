@@ -1,4 +1,4 @@
-@Library('your-shared-library') // Adjust 'your-shared-library' to your actual library name
+@Library('your-shared-library') // Replace 'your-shared-library' with your actual library name
 
 node {
     def pipelineParams = [
@@ -11,6 +11,6 @@ node {
         SONARQUBE_ENV_NAME: 'sonar-kumar'
     ]
 
-    // Call your custom pipeline method
+    // Call your custom pipeline method from MyPipeline class
     org.example.MyPipeline.runPipeline(pipelineParams)
 }
