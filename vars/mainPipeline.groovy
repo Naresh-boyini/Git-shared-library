@@ -1,5 +1,5 @@
 // vars/mainPipeline.groovy
-
+import hudson.plugins.git.GitSCM
 import org.example.Stages
 
 def call(Map params) {
