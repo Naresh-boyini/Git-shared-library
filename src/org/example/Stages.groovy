@@ -19,7 +19,7 @@ class Stages {
             }
         }
     }
-}
+
 
     static Closure modifyGoMod(Map params) {
         return {
