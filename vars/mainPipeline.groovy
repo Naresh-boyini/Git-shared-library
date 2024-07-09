@@ -1,3 +1,5 @@
+// vars/mainPipeline.groovy
+
 import org.example.Stages
 
 def call(Map params) {
@@ -15,13 +17,13 @@ def call(Map params) {
         }
 
         tools {
-            go "${params.GO_TOOL_NAME}" // Use the name exactly as configured in Jenkins' Global Tool Configuration
+            go "${params.GO_TOOL_NAME}"
         }
 
         environment {
-            SCANNER_HOME = tool "${params.SCANNER_TOOL_NAME}" // Define SCANNER_HOME for SonarQube
-            DEPENDENCY_CHECK_HOME = tool "${params.DEPENDENCY_TOOL_NAME}" // Define DEPENDENCY_CHECK_HOME for Dependency-Check
-            GO_VERSION = '1.18' // Define GO_VERSION for Go
+            SCANNER_HOME = tool "${params.SCANNER_TOOL_NAME}"
+            DEPENDENCY_CHECK_HOME = tool "${params.DEPENDENCY_TOOL_NAME}"
+            GO_VERSION = '1.18'
         }
 
         stages {
@@ -43,11 +45,9 @@ def call(Map params) {
         post {
             success {
                 echo 'Build successful!'
-                // Additional actions on success
             }
             failure {
                 echo 'Build failed!'
-                // Additional actions on failure
             }
         }
     }
