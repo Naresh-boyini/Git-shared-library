@@ -2,6 +2,8 @@ package org.example
 
 class MyPipeline {
     static void runPipeline(Map params) {
+        def stagesToRun = params.STAGES_TO_RUN.split(',').collect { it.trim() }
+
         pipeline {
             agent any
 
@@ -43,22 +45,16 @@ class MyPipeline {
                 )
             }
 
-            tools {
-                go "${params.GO_TOOL_NAME}" // Use the name exactly as configured in Jenkins' Global Tool Configuration
-            }
-
             environment {
-                SCANNER_HOME = "${tool(params.SCANNER_TOOL_NAME)}" // Define SCANNER_HOME for SonarQube
-                DEPENDENCY_CHECK_HOME = "${tool(params.DEPENDENCY_TOOL_NAME)}" // Define DEPENDENCY_CHECK_HOME for Dependency-Check
-                GO_VERSION = '1.18' // Define GO_VERSION for Go
+                SCANNER_HOME = "${tool(params.SCANNER_TOOL_NAME)}"
+                DEPENDENCY_CHECK_HOME = "${tool(params.DEPENDENCY_TOOL_NAME)}"
+                GO_VERSION = '1.18'
             }
 
             stages {
                 stage('Checkout') {
                     when {
                         expression {
-                            def stagesToRun = params.STAGES_TO_RUN.split(',').collect { it.trim() }
-                            echo "Stages to run: ${stagesToRun}"
                             return stagesToRun.contains('Checkout')
                         }
                     }
@@ -70,8 +66,6 @@ class MyPipeline {
                 stage('Modify go.mod') {
                     when {
                         expression {
-                            def stagesToRun = params.STAGES_TO_RUN.split(',').collect { it.trim() }
-                            echo "Stages to run: ${stagesToRun}"
                             return stagesToRun.contains('Modify go.mod')
                         }
                     }
@@ -86,8 +80,6 @@ class MyPipeline {
                 stage('Build') {
                     when {
                         expression {
-                            def stagesToRun = params.STAGES_TO_RUN.split(',').collect { it.trim() }
-                            echo "Stages to run: ${stagesToRun}"
                             return stagesToRun.contains('Build')
                         }
                     }
@@ -103,8 +95,6 @@ class MyPipeline {
                 stage('Unit Test') {
                     when {
                         expression {
-                            def stagesToRun = params.STAGES_TO_RUN.split(',').collect { it.trim() }
-                            echo "Stages to run: ${stagesToRun}"
                             return stagesToRun.contains('Unit Test')
                         }
                     }
@@ -116,8 +106,6 @@ class MyPipeline {
                 stage('SonarQube Analysis') {
                     when {
                         expression {
-                            def stagesToRun = params.STAGES_TO_RUN.split(',').collect { it.trim() }
-                            echo "Stages to run: ${stagesToRun}"
                             return stagesToRun.contains('SonarQube Analysis')
                         }
                     }
@@ -131,13 +119,10 @@ class MyPipeline {
                 stage('Dependency Scan') {
                     when {
                         expression {
-                            def stagesToRun = params.STAGES_TO_RUN.split(',').collect { it.trim() }
-                            echo "Stages to run: ${stagesToRun}"
                             return stagesToRun.contains('Dependency Scan')
                         }
                     }
                     steps {
-                        // Run OWASP Dependency-Check
                         dependencyCheck additionalArguments: '--scan . --format ALL', odcInstallation: "${params.DEPENDENCY_TOOL_NAME}"
                     }
                 }
@@ -145,17 +130,13 @@ class MyPipeline {
                 stage('Archive Report') {
                     when {
                         expression {
-                            def stagesToRun = params.STAGES_TO_RUN.split(',').collect { it.trim() }
-                            echo "Stages to run: ${stagesToRun}"
                             return stagesToRun.contains('Archive Report')
                         }
                     }
                     steps {
-                        // Archive the unit test results
                         archiveArtifacts artifacts: 'unit-test-results.xml', allowEmptyArchive: true
 
                         echo "Publishing Reports"
-                        // Publish OWASP Dependency-Check report in HTML format
                         publishHTML([
                             allowMissing: false,
                             alwaysLinkToLastBuild: true,
@@ -172,12 +153,10 @@ class MyPipeline {
             post {
                 success {
                     echo 'Build successful!'
-                    // Additional actions on success
                 }
 
                 failure {
                     echo 'Build failed!'
-                    // Additional actions on failure
                 }
             }
         }
