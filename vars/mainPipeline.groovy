@@ -25,14 +25,18 @@ def call(Map params) {
         }
 
         stages {
-            script {
-                Stages.checkout(params)
-                Stages.modifyGoMod(params)
-                Stages.build(params)
-                Stages.unitTest(params)
-                Stages.sonarQubeAnalysis(params)
-                Stages.dependencyScan(params)
-                Stages.archiveReport(params)
+            stage('Shared Library Stages') {
+                steps {
+                    script {
+                        Stages.checkout(params)
+                        Stages.modifyGoMod(params)
+                        Stages.build(params)
+                        Stages.unitTest(params)
+                        Stages.sonarQubeAnalysis(params)
+                        Stages.dependencyScan(params)
+                        Stages.archiveReport(params)
+                    }
+                }
             }
         }
 
