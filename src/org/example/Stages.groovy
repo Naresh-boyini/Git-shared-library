@@ -1,5 +1,6 @@
 package org.example
-
+import hudson.plugins.git.GitSCM
+import hudson.scm.SubversionSCM
 import static org.example.Common.*
 
 class Stages {
