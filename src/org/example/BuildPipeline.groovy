@@ -1,34 +1,57 @@
 package org.example
 
-def run() {
-    pipeline {
-        agent any
+class BuildPipeline {
+    static void run(script) {
+        pipeline {
+            agent any
 
-        stages {
-            stage('Build') {
-                steps {
-                    script {
-                        def goTool = tool name: 'Go', type: 'Go'
-                        env.PATH = "${goTool}/bin:${env.PATH}"
-                        
-                        sh '''
-                        go mod tidy
-                        go mod download
-                        go build -o employee-api .
-                        '''
+            stages {
+                stage('Checkout') {
+                    steps {
+                        script {
+                            Checkout.execute(script)
+                        }
+                    }
+                }
+
+                stage('Modify go.mod') {
+                    steps {
+                        script {
+                            Checkout.execute(script) // Example, replace with your specific modification logic
+                            sh '''
+                            export GO111MODULE=on
+                            sed -i 's/go 1.20/go 1.18/g' go.mod
+                            '''
+                        }
+                    }
+                }
+
+                stage('Build') {
+                    steps {
+                        script {
+                            Checkout.execute(script) // Example, replace with your specific build logic
+                            def goTool = tool name: 'Go', type: 'Go'
+                            env.PATH = "${goTool}/bin:${env.PATH}"
+                            
+                            sh '''
+                            go mod tidy
+                            go mod download
+                            go build -o employee-api .
+                            '''
+                        }
                     }
                 }
             }
-        }
 
-        post {
-            success {
-                echo 'Build successful!'
-                // Additional actions on success
-            }
-            failure {
-                echo 'Build failed!'
-                // Additional actions on failure
+            post {
+                success {
+                    echo 'Build successful!'
+                    // Additional actions on success
+                }
+                failure {
+                    echo 'Build failed!'
+                    // Additional actions on failure
+                }
             }
         }
     }
