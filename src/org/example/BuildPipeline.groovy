@@ -4,7 +4,7 @@ class BuildPipeline {
     static void run() {
         pipeline {
             agent any
-
+            
             stages {
                 stage('Checkout') {
                     steps {
