@@ -1,7 +1,7 @@
 package org.example
 
 class BuildPipeline {
-    static void run(script) {
+    static void run() {
         pipeline {
             agent any
 
@@ -17,7 +17,7 @@ class BuildPipeline {
                 stage('Modify go.mod') {
                     steps {
                         script {
-                            Checkout.execute(script) // Example, replace with your specific modification logic
+                            Checkout.execute(script)
                             sh '''
                             export GO111MODULE=on
                             sed -i 's/go 1.20/go 1.18/g' go.mod
@@ -29,7 +29,7 @@ class BuildPipeline {
                 stage('Build') {
                     steps {
                         script {
-                            Checkout.execute(script) // Example, replace with your specific build logic
+                            Checkout.execute(script)
                             def goTool = tool name: 'Go', type: 'Go'
                             env.PATH = "${goTool}/bin:${env.PATH}"
                             
