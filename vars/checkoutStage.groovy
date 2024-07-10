@@ -1,3 +1,3 @@
-def call(script) {
-    org.example.Checkout.execute(script)
+def call() {
+    org.example.Checkout.execute(this)
 }
