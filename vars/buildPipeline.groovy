@@ -1,6 +1,9 @@
+
 def call(Map pipelineParams) {
-    def gitUrl = pipelineParams.gitUrl ?: error 'Git URL not provided'
-    def gitBranch = pipelineParams.gitBranch ?: error 'Git branch not provided'
-    
-    org.example.BuildPipeline.run(gitUrl, gitBranch)
+    def projectDirectory = pipelineParams.projectDirectory ?: error('Missing projectDirectory parameter')
+
+    return {
+        script ->
+        org.example.Build.execute(script, projectDirectory)
+    }
 }
