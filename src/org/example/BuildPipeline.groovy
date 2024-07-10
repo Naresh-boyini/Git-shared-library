@@ -1,7 +1,7 @@
 package org.example
 
 class BuildPipeline {
-    static void run() {
+    static void run(String gitUrl, String gitBranch) {
         pipeline {
             agent any
             
@@ -9,7 +9,7 @@ class BuildPipeline {
                 stage('Checkout') {
                     steps {
                         script {
-                            Checkout.execute(script)
+                            Checkout.execute(script, gitUrl, gitBranch)
                         }
                     }
                 }
@@ -17,7 +17,7 @@ class BuildPipeline {
                 stage('Modify go.mod') {
                     steps {
                         script {
-                            Checkout.execute(script)
+                            Checkout.execute(script, gitUrl, gitBranch)
                             sh '''
                             export GO111MODULE=on
                             sed -i 's/go 1.20/go 1.18/g' go.mod
@@ -29,7 +29,7 @@ class BuildPipeline {
                 stage('Build') {
                     steps {
                         script {
-                            Checkout.execute(script)
+                            Checkout.execute(script, gitUrl, gitBranch)
                             def goTool = tool name: 'Go', type: 'Go'
                             env.PATH = "${goTool}/bin:${env.PATH}"
                             
