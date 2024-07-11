@@ -3,6 +3,8 @@ package org.example
 
 class HelloWorld {
     static void sayHello() {
-        println "Hello, World!"
+        def command = "echo 'Hello, World!'"
+        def output = command.execute().text
+        println "Shell Output: $output"
     }
 }
