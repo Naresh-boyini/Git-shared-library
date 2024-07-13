@@ -32,7 +32,7 @@ def checkoutGitRepository(String gitUrl, String gitBranch) {
 }
 
 def executeGoCommands() {
-    GoCommands.execute(this)
+    GoCommands.executeGoBuild()
 }
 
 def runDependencyCheck() {
