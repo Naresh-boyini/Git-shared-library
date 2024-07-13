@@ -3,6 +3,12 @@
 pipeline {
     agent any
 
+    tools {
+        // Define the Go tool installation
+        go 'Go'
+        // 'Go' here is the name of the Go installation configured in Jenkins
+    }
+
     parameters {
         string(name: 'gitUrl', defaultValue: 'https://github.com/Naresh-boyini/employee-api.git', description: 'Git repository URL')
         string(name: 'gitBranch', defaultValue: 'main', description: 'Git branch')
