@@ -6,18 +6,22 @@ pipeline {
     parameters {
         string(name: 'GIT_URL', defaultValue: 'https://github.com/your-repo/your-project.git', description: 'Git repository URL')
         string(name: 'GIT_BRANCH', defaultValue: 'main', description: 'Git branch to checkout')
+        string(name: 'PROJECT_DIR', defaultValue: '.', description: 'Project directory for build')
     }
 
     stages {
-        stage('Checkout') {
+        stage('Initialize') {
             steps {
-                checkoutStage()
+                script {
+                    pipelineParams = [
+                        projectDirectory: params.PROJECT_DIR
+                    ]
+                }
             }
         }
-        stage('Build') {
+        stage('Checkout and Build') {
             steps {
-                echo 'Building the project...'
-                // Add your build steps here
+                checkoutStage(pipelineParams)
             }
         }
     }
