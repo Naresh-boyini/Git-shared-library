@@ -4,7 +4,7 @@ pipeline {
     agent any
 tools {
         // Define the Go tool installation
-        go 'Go'
+        go 'Go 1.20'
         // 'Go' here is the name of the Go installation configured in Jenkins
     }
     parameters {
