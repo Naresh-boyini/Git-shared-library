@@ -36,5 +36,5 @@ def executeGoCommands() {
 }
 
 def runUnitTests() {
-    GoTest.execute(this)
+    UnitTestStage.execute(this)
 }
