@@ -2,7 +2,7 @@ package org.example
 
 import org.example.Checkout
 import org.example.GoCommands
-import org.example.GoTest
+import org.example.UnitTestStage
 
 def call(Map params) {
     String tasksToRun = params.get('tasks', 'all') // Default to 'all' tasks if not specified
