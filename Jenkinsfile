@@ -10,18 +10,13 @@ pipeline {
     }
 
     stages {
-        stage('Initialize') {
+        stage('Build and Checkout') {
             steps {
-                script {
-                    pipelineParams = [
-                        projectDirectory: params.PROJECT_DIR
-                    ]
-                }
-            }
-        }
-        stage('Checkout and Build') {
-            steps {
-                checkoutStage(pipelineParams)
+                buildAndCheckout([
+                    GIT_URL: params.GIT_URL,
+                    GIT_BRANCH: params.GIT_BRANCH,
+                    projectDirectory: params.PROJECT_DIR
+                ])
             }
         }
     }
