@@ -8,9 +8,11 @@ class GoCommands {
         // Use Go tool
       //  script.withEnv(["PATH+GO=${goTool}/bin"]) {
           sh '''
+                (java.lang.String) values: [
                 go mod tidy
                 go mod download
                 go build -o employee-api .
+            ]
             '''
         
     }
