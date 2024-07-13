@@ -1,6 +1,6 @@
 package org.example
 
-class GoTest {
+class UnitTestStage {
     static void execute(script) {
         // Using the Go Plugin to execute Go commands
         script.sh '''
