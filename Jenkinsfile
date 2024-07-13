@@ -17,7 +17,7 @@ tools {
         stage('Execute Pipeline') {
             steps {
                 script {
-                    buildPipeline(
+                    executePipeline(
                         gitUrl: params.gitUrl,
                         gitBranch: params.gitBranch,
                         tasks: params.tasks
