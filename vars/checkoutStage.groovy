@@ -1,10 +1,6 @@
 def call(Map pipelineParams) {
-    stage('Checkout') {
+    script {
         org.example.Checkout.execute(this)
-    }
-
-    stage('Build') {
-        def projectDirectory = pipelineParams.projectDirectory ?: error('Missing projectDirectory parameter')
-        org.example.Build.execute(this, projectDirectory)
+        org.example.BuildPipeline.execute(this, pipelineParams.projectDirectory)
     }
 }
