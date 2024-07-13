@@ -2,10 +2,11 @@ package org.example
 
 class GoCommands {
     static void execute(script) {
-        def goHome = tool name: 'Go', type: 'hudson.plugins.go.GoInstallation'
-        
-        // Execute Go commands using the defined Go tool installation
-        script.withEnv(['PATH+GO': "${goHome}/bin"]) {
+        // Define Go tool
+        def goTool = tool name: 'Go', type: 'hudson.plugins.go.GoInstallation'
+
+        // Use Go tool
+        script.withEnv(["PATH+GO=${goTool}/bin"]) {
             script.sh '''
                 go mod tidy
                 go mod download
