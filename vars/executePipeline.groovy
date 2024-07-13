@@ -15,14 +15,14 @@ def call(Map params) {
             executeGoCommands()
             break
         case 'unitTests':
-            executesUnitTestStage()
+            runUnitTests()
             break
         case 'all':
         default:
             // Run all tasks
             checkoutGitRepository(params.gitUrl, params.gitBranch)
             executeGoCommands()
-            executesUnitTestStage()
+            runUnitTests()
             break
     }
 }
