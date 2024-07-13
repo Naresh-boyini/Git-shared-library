@@ -5,10 +5,10 @@ import org.example.Build
 
 def call(Map pipelineParams) {
     def projectDirectory = pipelineParams.projectDirectory ?: error('Missing projectDirectory parameter')
-    def stagesToRun = pipelineParams.stagesToRun ?: 'checkout,build'
+    def paramBuild = pipelineParams.paramBuild ?: 'checkout,build'
 
-    def stages = stagesToRun.split(',')
-    
+    def stages = paramBuild.split(',')
+
     return {
         script ->
         stages.each { stage ->
