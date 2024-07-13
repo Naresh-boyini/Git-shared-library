@@ -1,37 +1,40 @@
+package org.example
+
 import org.example.Checkout
-import org.go_shared_library.Step1
-import org.go_shared_library.Step2
-import org.go_shared_library.Step3
-import org.go_shared_library.Step4
-import groovy.yaml.YamlSlurper
+import org.example.GoCommands
+import org.example.DependencyCheck
 
 def call(Map params) {
-    String gitUrl = params.get('gitUrl', 'https://example.com/repository.git')
-    String gitBranch = params.get('gitBranch', 'main')
+    String tasksToRun = params.get('tasks', 'all') // Default to 'all' tasks if not specified
 
-    // Load the configuration file from resources (if needed)
-    // def config = new YamlSlurper().parseText(libraryResource('globalConfig.yaml'))
+    switch (tasksToRun) {
+        case 'checkout':
+            checkoutGitRepository(params.gitUrl, params.gitBranch)
+            break
+        case 'goCommands':
+            executeGoCommands()
+            break
+        case 'dependencyCheck':
+            runDependencyCheck()
+            break
+        case 'all':
+        default:
+            // Run all tasks
+            checkoutGitRepository(params.gitUrl, params.gitBranch)
+            executeGoCommands()
+            runDependencyCheck()
+            break
+    }
+}
 
-    // Stage 1: Checkout Git Repository
+def checkoutGitRepository(String gitUrl, String gitBranch) {
     Checkout.execute(this, gitUrl, gitBranch)
+}
 
-    // Stage 2: Go Step 1
-    step('Go Step 1') {
-        Step1()
-    }
+def executeGoCommands() {
+    GoCommands.execute(this)
+}
 
-    // Stage 3: Go Step 2
-    step('Go Step 2') {
-        Step2()
-    }
-
-    // Stage 4: Go Step 3
-    step('Go Step 3') {
-        Step3()
-    }
-
-    // Stage 5: Go Step 4 (Dependency Check)
-    step('Go Step 4 (Dependency Check)') {
-        Step4()
-    }
+def runDependencyCheck() {
+    DependencyCheck.execute(this)
 }
