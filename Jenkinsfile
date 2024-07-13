@@ -1,4 +1,4 @@
-@Library('global-shared-library') _
+@Library('your-shared-library') _
 
 pipeline {
     agent any
