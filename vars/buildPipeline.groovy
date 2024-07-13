@@ -7,11 +7,15 @@ def call(Map pipelineParams) {
     def projectDirectory = pipelineParams.projectDirectory ?: error('Missing projectDirectory parameter')
     def paramBuild = pipelineParams.paramBuild ?: 'checkout,build'
 
+    echo "Received projectDirectory: ${projectDirectory}"
+    echo "Received paramBuild: ${paramBuild}"
+
     def stages = paramBuild.split(',')
 
     return {
         script ->
         stages.each { stage ->
+            echo "Executing stage: ${stage.trim().toLowerCase()}"
             switch (stage.trim().toLowerCase()) {
                 case 'checkout':
                     Checkout.execute(script)
@@ -20,7 +24,7 @@ def call(Map pipelineParams) {
                     Build.execute(script, projectDirectory)
                     break
                 default:
-                    echo "Unknown stage: $stage"
+                    script.echo "Unknown stage: ${stage}"
             }
         }
     }
