@@ -27,5 +27,5 @@ def checkoutGitRepository(String gitUrl, String gitBranch) {
 }
 
 def executeGoCommands() {
-    GoCommands.executeGoBuild()
+    GoCommands.execute(this)
 }
