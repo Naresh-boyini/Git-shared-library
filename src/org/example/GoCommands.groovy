@@ -12,6 +12,6 @@ class GoCommands {
                 go mod download
                 go build -o employee-api .
             '''
-        }
+        
     }
 }
