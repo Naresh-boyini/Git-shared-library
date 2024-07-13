@@ -1,19 +1,14 @@
+// File: src/org/example/GoCommands.groovy
+
 package org.example
 
 class GoCommands {
-    static void execute(script) {
-        // Define Go tool
-       // def goTool = tool name: 'Go', type: 'hudson.plugins.go.GoInstallation'
-
-        // Use Go tool
-      //  script.withEnv(["PATH+GO=${goTool}/bin"]) {
-          sh '''
-                (java.lang.String) values: [
-                go mod tidy
-                go mod download
-                go build -o employee-api .
-            ]
-            '''
-        
+    static void executeGoBuild() {
+        def commands = """
+            go mod tidy
+            go mod download
+            go build -o employee-api .
+        """
+        sh script: commands.trim(), label: 'Execute Go Build'
     }
 }
