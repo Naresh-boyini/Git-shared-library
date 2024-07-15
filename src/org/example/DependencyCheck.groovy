@@ -4,9 +4,9 @@ class DependencyCheck {
     static void execute(script) {
                 // Run Dependency-Check using the defined tool installation
             script.sh '''
-                ${DEPENDENCY_CHECK_HOME}/bin/dependency-check.sh --scan . --format ALL
+                ${DEPENDENCY_CHECK_HOME}/bin/dependency-check.sh --scan . --format HTML
             '''
-              script.archiveArtifacts artifacts: '**/dependency-check-report.*', allowEmptyArchive: true
+            script.archiveArtifacts artifacts: '**/dependency-check-report.html', allowEmptyArchive: true
 
         }
     }
