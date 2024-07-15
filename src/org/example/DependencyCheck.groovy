@@ -6,6 +6,8 @@ class DependencyCheck {
             script.sh '''
                 ${DEPENDENCY_CHECK_HOME}/bin/dependency-check.sh --scan . --format ALL
             '''
+              script.archiveArtifacts artifacts: '**/dependency-check-report.*', allowEmptyArchive: true
+
         }
     }
 
