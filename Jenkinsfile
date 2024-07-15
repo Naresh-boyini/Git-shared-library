@@ -9,7 +9,7 @@ pipeline {
         // 'Go' here is the name of the Go installation configured in Jenkins
     }
     environment {
-        dependencyCheckHome = tool 'Dependency-Check' // Define DEPENDENCY_CHECK_HOME for Dependency-Check
+        DEPENDENCY_CHECK_HOME = tool 'Dependency-Check' // Define DEPENDENCY_CHECK_HOME for Dependency-Check
     }
 
     parameters {
