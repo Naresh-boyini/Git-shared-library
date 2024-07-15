@@ -43,6 +43,6 @@ def executeGoCommands() {
 def runUnitTests() {
     UnitTestStage.execute(this)
 }
-def dependencyCheck() {
+def dependencyCheck(env.dependencyCheckHome) {
     DependencyCheck.execute(this)
 }
