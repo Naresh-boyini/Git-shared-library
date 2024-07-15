@@ -15,7 +15,7 @@ pipeline {
     parameters {
         string(name: 'gitUrl', defaultValue: 'https://github.com/Naresh-boyini/employee-api.git', description: 'Git repository URL')
         string(name: 'gitBranch', defaultValue: 'main', description: 'Git branch')
-        string(name: 'tasks', defaultValue: 'all', description: 'Tasks to execute: checkout, goCommands, unitTests, or all')
+        string(name: 'tasks', defaultValue: 'all', description: 'Tasks to execute: checkout, goCommands, unitTests, depenCheck or all')
     }
 
     stages {
