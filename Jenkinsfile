@@ -73,18 +73,18 @@ node {
     env.DEPENDENCY_CHECK_HOME = dependencyCheckHome
 
     stage('Checkout') {
-        checkoutGitRepository(gitUrl, gitBranch)
+        buildPipeline.checkoutGitRepository(gitUrl, gitBranch)
     }
     
     stage('Execute Go Commands') {
-        executeGoCommands()
+        buildPipeline.executeGoCommands()
     }
     
     stage('Run Unit Tests') {
-        runUnitTests()
+        buildPipeline.runUnitTests()
     }
     
     stage('Dependency Check') {
-        dependencyCheck()
+        buildPipeline.dependencyCheck()
     }
 }
