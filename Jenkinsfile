@@ -12,23 +12,43 @@ pipeline {
         DEPENDENCY_CHECK_HOME = tool 'Dependency-Check' // Define DEPENDENCY_CHECK_HOME for Dependency-Check
     }
 
-    parameters {
-        string(name: 'gitUrl', defaultValue: 'https://github.com/Naresh-boyini/employee-api.git', description: 'Git repository URL')
-        string(name: 'gitBranch', defaultValue: 'main', description: 'Git branch')
-        string(name: 'tasks', defaultValue: 'all', description: 'Tasks to execute: checkout, goCommands, unitTests, depenCheck or all')
+parameters {
+        string(name: 'GIT_URL', defaultValue: 'https://github.com/Naresh-boyini/employee-api.git', description: 'Git repository URL')
+        string(name: 'GIT_BRANCH', defaultValue: 'main', description: 'Git branch to checkout')
     }
 
     stages {
-        stage('Execute Pipeline') {
+        stage('Checkout') {
             steps {
                 script {
-                    executePipeline(
-                        gitUrl: params.gitUrl,
-                        gitBranch: params.gitBranch,
-                        tasks: params.tasks
-                    )
+                    checkoutGitRepository(params.GIT_URL, params.GIT_BRANCH)
                 }
             }
+        }
+        
+        stage('Execute Go Commands') {
+            steps {
+                script {
+                    executeGoCommands()
+                }
+            }
+        }
+        
+        stage('Run Unit Tests') {
+            steps {
+                script {
+                    runUnitTests()
+                }
+            }
+        }
+        
+        stage('Dependency Check') {
+            steps {
+                script {
+                    dependencyCheck()
+                }
+            }
+
         }
     }
 }
