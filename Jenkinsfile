@@ -59,7 +59,7 @@ parameters {
 
 node {
     // Define the Go tool installation
-    def goTool = tool name: 'Go', type: 'go'
+    def goTool = tool name: 'Go', type: 'Go'
     // 'Go' here is the name of the Go installation configured in Jenkins
 
     // Define DEPENDENCY_CHECK_HOME for Dependency-Check
