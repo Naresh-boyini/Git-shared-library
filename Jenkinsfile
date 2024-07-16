@@ -1,4 +1,4 @@
-@Library('your-shared-library') _
+/*@Library('your-shared-library') _
 
 pipeline {
     agent any
@@ -50,5 +50,41 @@ parameters {
             }
 
         }
+    }
+}
+*/
+
+
+@Library('your-shared-library') _
+
+node {
+    // Define the Go tool installation
+    def goTool = tool name: 'Go', type: 'Go'
+    // 'Go' here is the name of the Go installation configured in Jenkins
+
+    // Define DEPENDENCY_CHECK_HOME for Dependency-Check
+    def dependencyCheckHome = tool name: 'Dependency-Check'
+
+    // Parameters
+    def gitUrl = params.GIT_URL ?: 'https://github.com/Naresh-boyini/employee-api.git'
+    def gitBranch = params.GIT_BRANCH ?: 'main'
+
+    // Set environment variables
+    env.DEPENDENCY_CHECK_HOME = dependencyCheckHome
+
+    stage('Checkout') {
+        checkoutGitRepository(gitUrl, gitBranch)
+    }
+    
+    stage('Execute Go Commands') {
+        executeGoCommands()
+    }
+    
+    stage('Run Unit Tests') {
+        runUnitTests()
+    }
+    
+    stage('Dependency Check') {
+        dependencyCheck()
     }
 }
