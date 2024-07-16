@@ -21,7 +21,7 @@ parameters {
         stage('Checkout') {
             steps {
                 script {
-                    checkoutGitRepository(params.GIT_URL, params.GIT_BRANCH)
+                    buildPipeline.checkoutGitRepository(params.GIT_URL, params.GIT_BRANCH)
                 }
             }
         }
@@ -29,7 +29,7 @@ parameters {
         stage('Execute Go Commands') {
             steps {
                 script {
-                    executeGoCommands()
+                    buildPipeline.executeGoCommands()
                 }
             }
         }
@@ -37,7 +37,7 @@ parameters {
         stage('Run Unit Tests') {
             steps {
                 script {
-                    runUnitTests()
+                    buildPipeline.runUnitTests()
                 }
             }
         }
@@ -45,7 +45,7 @@ parameters {
         stage('Dependency Check') {
             steps {
                 script {
-                    dependencyCheck()
+                    buildPipeline.dependencyCheck()
                 }
             }
 
