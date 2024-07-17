@@ -4,7 +4,7 @@ class UnitTestStage {
     static void execute(script) {
         // Using the Go Plugin to execute Go commands
         script.sh '''
-         go test ./... -v
+         go test ./... -v | go-junit-report > report.xml
         '''
     }
 }
