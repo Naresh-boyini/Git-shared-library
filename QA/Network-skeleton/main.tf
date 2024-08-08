@@ -1,6 +1,6 @@
 
 module "network-skeleton" {
-  source = "git::https://${GITHUB_TOKEN}@github.com/mygurkulam-p9/Terrform_Module.git?ref=network-skeleton"
+  source = "git::https://github.com/mygurkulam-p9/Terrform_Module.git//network-skeleton?ref=network-skeleton"
   vpc_cidr_block = "11.0.0.0/25"
   instance_tenancy = "default"
   vpc_name = "QA-vpc"
